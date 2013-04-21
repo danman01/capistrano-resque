@@ -33,8 +33,8 @@ module CapistranoResque
         end
 
         def start_command(queue, pid)
-          "cd #{current_path} && \
-          nohup rake resque:work PIDFILE=#{pid} VERBOSE=1 \
+          "cd #{current_path} && RAILS_ENV=#{rails_env} QUEUE=\"#{queue}\" \
+          PIDFILE=#{pid} VERBOSE=1 nohup rake resque:work \
           >> log/resque_worker_1.log 2>&1 &"
           #"cd ${current_path} && RAILS_ENV=#{rails_env} QUEUE=\"#{queue}\" \
           # PIDFILE=#{pid} BACKGROUND=yes VERBOSE=1 INTERVAL=#{interval} \
