@@ -36,7 +36,7 @@ module CapistranoResque
           "cd #{current_path} && RAILS_ENV=#{rails_env} QUEUE=\"#{queue}\" \
            PIDFILE=#{pid} VERBOSE=1 INTERVAL=#{interval} \
            nohup #{fetch(:bundle_cmd, "bundle")} exec rake resque:work \
-           & >> log/resque_worker_#{queue}.log 2>&1 "
+           >> log/resque_worker_#{queue}.log 2>&1 &"
         end
 
         def stop_command
