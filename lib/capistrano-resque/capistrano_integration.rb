@@ -26,22 +26,21 @@ module CapistranoResque
         end
 
         def status_command
-          "if [ -e #{current_path}/tmp/pids/resque_work_1.pid ]; then \
-            for f in $(ls #{current_path}/tmp/pids/resque_work*.pid); \
+          "if [ -e #{current_path}/tmp/pids/resque_worker_1.pid ]; then \
+            for f in $(ls #{current_path}/tmp/pids/resque_worker*.pid); \
               do ps -p $(cat $f) | sed -n 2p ; done \
            ;fi"
         end
 
         def start_command(queue, pid)
-          "cd #{current_path} && RAILS_ENV=#{rails_env} QUEUE=\"#{queue}\" \
-           PIDFILE=#{pid} VERBOSE=1 INTERVAL=#{interval} \
-           nohup #{fetch(:bundle_cmd, "bundle")} exec rake resque:work \
-           >> log/resque_worker_#{queue}.log 2>&1 &"
+          "cd #{current_path} && \
+          nohup rake resque:work PIDFILE='tmp/pids/resque_worker_1.pid' & \
+          >> log/resque_worker_1.log 2>&1 &"
         end
 
         def stop_command
-          "if [ -e #{current_path}/tmp/pids/resque_work_1.pid ]; then \
-           for f in `ls #{current_path}/tmp/pids/resque_work*.pid`; \
+          "if [ -e #{current_path}/tmp/pids/resque_worker_1.pid ]; then \
+           for f in `ls #{current_path}/tmp/pids/resque_worker*.pid`; \
              do #{try_sudo} kill -s #{resque_kill_signal} `cat $f` \
              && rm $f ;done \
            ;fi"
