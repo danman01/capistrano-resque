@@ -50,7 +50,7 @@ module CapistranoResque
         def start_scheduler(pid)
           "cd #{current_path} && RAILS_ENV=#{rails_env} \
            PIDFILE=#{pid} VERBOSE=1 MUTE=1 \
-           nohup #{fetch(:bundle_cmd, "bundle")} exec rake resque:scheduler"
+           nohup #{fetch(:bundle_cmd, "bundle")} exec rake resque:scheduler &"
         end
 
         def stop_scheduler(pid)
