@@ -33,12 +33,12 @@ module CapistranoResque
         end
 
         def start_command(queue, pid)
-          #"cd #{current_path} && \
-          #nohup rake resque:work PIDFILE='tmp/pids/resque_worker_1.pid' & \
-          #>> log/resque_worker_1.log 2>&1 &"
-          "cd ${current_path} && RAILS_ENV=#{rails_env} QUEUE=\"#{queue}\" \
-           PIDFILE=#{pid} BACKGROUND=yes VERBOSE=1 INTERVAL=#{interval} \
-           #{fetch(:bundle_cmd, "bundle")} exec rake resque:work"
+          "cd #{current_path} && \
+          nohup rake resque:work PIDFILE=#{pid} VERBOSE=1 \
+          >> log/resque_worker_1.log 2>&1 &"
+          #"cd ${current_path} && RAILS_ENV=#{rails_env} QUEUE=\"#{queue}\" \
+          # PIDFILE=#{pid} BACKGROUND=yes VERBOSE=1 INTERVAL=#{interval} \
+          # #{fetch(:bundle_cmd, "bundle")} exec rake resque:work"
         end
 
         def stop_command
@@ -75,7 +75,7 @@ module CapistranoResque
                 logger.info "Starting #{number_of_workers} worker(s) with QUEUE: #{queue}"
                 threads = []
                 number_of_workers.times do
-                  pid = "./tmp/pids/resque_work_#{worker_id}.pid"
+                  pid = "./tmp/pids/resque_worker_#{worker_id}.pid"
                   threads << Thread.new(pid) { |pid| run(start_command(queue, pid), :roles => role) }
                   worker_id += 1
                 end
